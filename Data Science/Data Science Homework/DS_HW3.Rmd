@@ -1,0 +1,142 @@
+---
+title: "Homework 4"
+author: "Sasha Uspenskaya and Colin Coil"
+date: "2024-02-11"
+output:
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("/Users/sashauspenskaya/Desktop")
+```
+
+
+```{r}
+library(tidyverse) 
+library(dplyr)
+```
+
+# 1.)
+## a) Use the R function nrow to confirm that the iris data frame has 150 rows. Then use and show R code that features a map function to confirm that the iris data frame has 150 rows.
+
+```{r}
+nrow(iris)
+map_int(iris, ~nrow(data.frame(.)))
+```
+
+## b) Each column of the iris data frame has a unique number of values or objects. For example, the column Sepal.Length has 150 values but 35 of them are unique. Use and show R code that features a map function to find the number of unique values or objects for each column of the iris data frame.
+
+```{r}
+map(iris, n_distinct)
+```
+
+# 2.)
+```{r}
+z <- matrix( nrow = 3, ncol = 5)
+for (m in 1:3) {
+  for (n in 1:5) {
+    z[m, n] <- -1*(m -n)
+  }
+}
+print(z)
+```
+
+
+
+# 3) Use and show R code that will produce a tibble that features 10 randomly generated values that are normally distributed, with means of -10, 0, 10 and 100 respectfully. Run your code again, producing a second tibble, that confirms random values, hence the second table will not have the same values.
+
+```{r}
+tibble(
+  x = rnorm(10, mean = -10),
+  y = rnorm(10, mean = 0), 
+  z = rnorm(10, mean = 10),
+  w = rnorm(10, mean = 100)
+  )
+
+tibble(
+  x = rnorm(10, mean = -10),
+  y = rnorm(10, mean = 0), 
+  z = rnorm(10, mean = 10),
+  w = rnorm(10, mean = 100)
+)
+```
+
+# 4)
+```{r}
+X <- list(12, 14, 15, 18, 19, 22,10,18,18)
+mean <- list(16, 16, 16, 16, 16,16,16,16,16)
+sd <- list(2, 2, 2, 2, 2,2,2,2,2)
+
+
+```
+
+
+## a) In statistics, a z score indicates the standard deviation distance between the mean and a specific value of the data set. What formula is used to find a z score? Use and show R coding that features a map function to iteratively find z scores across the lists given above.
+
+Formula for z-score:
+$Z=\frac{x-\mu}{\sigma}$
+```{r}
+pmap_dbl(list(X, mean, sd), function(o, m, s) (o-m)/s)
+```
+
+
+
+## b) The test statistic for a population mean is given by the formula ((X - mean)/s/sqrt(n)) Use and show R coding that features a map function to iteratively find test statistics for population means across the lists given above.
+
+```{r}
+pmap_dbl(list(X, mean, sd), function(o, m, s) (o-m)/(s/sqrt(length(X))))
+```
+
+# 5)
+```{r}
+V = c(10,15,17,22,32,38,42)
+```
+
+## a) Another purr package function is the keep( ) function. Research, explore, and use the keep( ) function to extract all number from the vector V given above that are less than 20
+```{r}
+keep(V, ~.x < 20)
+```
+
+
+## b) Another purr package function is the discard( ) function. Research, explore, and use the discard( ) function to eliminate all numbers from the vector V given above that are less than 20
+
+```{r}
+discard(V,~.x<20)
+```
+
+
+
+# 6) Another purr package function is the safely( ) function. Research, explore, and apply the safely( ) function to the given vector below as illustrated.
+```{r}
+U = list(10,15,"mary",22,32,"james",42)
+map(U, safely(~ .x + 15))
+```
+In four or five sentences, explain the specific output for this problem and how the definition and the application of the safely( ) function is used.
+
+
+The safely() function in purrr allows you to safely apply a function to each element of a list or vector, catching any errors and returning NULL instead of failing. In this example, we are mapping the function ~.x + 15 over the vector U, which contains both numeric and character elements. The + operator can only be applied to numeric values, so when it hits the character elements "mary" and "james", it will produce an error. The safely() function catches those errors and replaces the character elements with NULL in the output, rather than failing and stopping execution.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
